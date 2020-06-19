@@ -42,6 +42,7 @@ class ChatApiLocationDriver extends ChatApiDriver
 
         if (empty($this->messages)) {
             $userId = $this->event->get('chatId');
+            $pattern = Location::PATTERN;
             $message = new IncomingMessage($pattern, $userId, $userId, $this->payload);
             list($lat, $long) = explode(';', $this->event->get('body'));
             
