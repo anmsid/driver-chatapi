@@ -13,6 +13,7 @@ use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\Studio\Providers\StudioServiceProvider;
 use ChatApiDriver\ChatApiDriver;
 use ChatApiDriver\ChatApiFileDriver;
+use ChatApiDriver\ChatApiLocationDriver;
 use Illuminate\Support\ServiceProvider;
 
 class ChatApiDriverServiceProvider extends ServiceProvider
@@ -40,6 +41,7 @@ class ChatApiDriverServiceProvider extends ServiceProvider
     {
         DriverManager::loadDriver(ChatApiDriver::class);
         DriverManager::loadDriver(ChatApiFileDriver::class);
+        DriverManager::loadDriver(ChatApiLocationDriver::class);
     }
     /**
      * @return bool
