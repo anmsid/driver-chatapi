@@ -71,7 +71,15 @@ class ChatApiDriver extends HttpDriver
      */
     public function getUser(IncomingMessage $matchingMessage)
     {
-        return new User($matchingMessage->getSender());
+        $firstName = null;
+        $lastName = null;
+        $userName = $this->event->get('author');
+        $userInfo = array(
+            'phone' => \explode('@', $this->event->get('author'))[0],
+            'chatId' => $this->event->get('chatId'),
+            'chatName' => $this->event->get('chatName')
+        );
+        return new User($matchingMessage->getSender(), $firstName, $lastName, $userName, $userInfo);
     }
 
     /**
