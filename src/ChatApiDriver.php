@@ -109,6 +109,7 @@ class ChatApiDriver extends HttpDriver
                 $payload['chatId'] = $matchingMessage->getSender();
                 $payload['body'] = $this->getSecureAttachmentUrl($attachment);
                 $payload['filename'] = $this->getAttachmentFileName($attachment);
+                $payload['caption'] = $message->getText();
             }
         }
 
@@ -128,6 +129,9 @@ class ChatApiDriver extends HttpDriver
 
         $url = $this->config->get('instance_url') . "/{$action}?token={$this->config->get('token')}";
         $response = $this->http->post($url, [], $payload);
+        info('url: '. $url);
+        info('payload: '. $payload);
+        info('chat-api response: ' . $response->getContent()); 
         return $response;
     }
 
