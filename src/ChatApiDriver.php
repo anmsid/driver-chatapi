@@ -130,7 +130,7 @@ class ChatApiDriver extends HttpDriver
         $url = $this->config->get('instance_url') . "/{$action}?token={$this->config->get('token')}";
         $response = $this->http->post($url, [], $payload);
         info('url: '. $url);
-        info('payload: '. $payload);
+        info('payload: '. json_encode($payload));
         info('chat-api response: ' . $response->getContent()); 
         return $response;
     }
@@ -171,6 +171,11 @@ class ChatApiDriver extends HttpDriver
     }
 
     protected function getSecureAttachmentUrl(Attachment $attachment) {
-        return str_replace('http', 'https', $attachment->getUrl());
+        if (\substr($attachment->getUrl(), 0, 5) === 'https') {
+            return $attachment->getUrl();
+        } else {
+            return str_replace('http', 'https', $attachment->getUrl());
+        }
+        
     }
 }
