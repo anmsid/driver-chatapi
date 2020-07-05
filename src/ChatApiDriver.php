@@ -108,8 +108,19 @@ class ChatApiDriver extends HttpDriver
                 $attachment = $message->getAttachment();
                 $payload['chatId'] = $matchingMessage->getSender();
                 $payload['body'] = $this->getSecureAttachmentUrl($attachment);
-                $payload['filename'] = $this->getAttachmentFileName($attachment);
-                $payload['caption'] = $message->getText();
+                if ($attachment instanceof File) {
+                    $payload['filename'] = $this->getAttachmentFileName($attachment);
+                } elseif ($attachment instanceof Image) {
+                    $payload['caption'] = $attachment->getTitle();
+                    $payload['filename'] = $this->getAttachmentFileName($attachment);
+                } elseif ($attachment instanceof Contact) {
+                    unset($payload['body']);
+                    if (!is_null($attachment->getVcard())) {
+                        $payload['vcard'] = $attachment->getVcard();
+                    } else {
+                        $payload['contactId'] = $attachment->getPhoneNumber().'@c.us';
+                    }   
+                }
             }
         }
 
@@ -122,9 +133,13 @@ class ChatApiDriver extends HttpDriver
      */
     public function sendPayload($payload)
     {
-        $action = 'message';
+        $action = 'sendMessage';
         if(isset($payload['filename'])) {
             $action = 'sendFile';
+        } elseif (isset($payload['contactId'])) {
+            $action = 'sendContact';
+        } elseif (isset($payload['vcard'])) {
+            $action = 'sendVCard';
         }
 
         $url = $this->config->get('instance_url') . "/{$action}?token={$this->config->get('token')}";
