@@ -12,6 +12,9 @@ namespace ChatApiDriver;
 use BotMan\BotMan\Drivers\HttpDriver;
 use BotMan\BotMan\Interfaces\UserInterface;
 use BotMan\BotMan\Messages\Attachments\Attachment;
+use BotMan\BotMan\Messages\Attachments\File;
+use BotMan\BotMan\Messages\Attachments\Image;
+use BotMan\BotMan\Messages\Attachments\Contact;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
@@ -144,8 +147,6 @@ class ChatApiDriver extends HttpDriver
 
         $url = $this->config->get('instance_url') . "/{$action}?token={$this->config->get('token')}";
         $response = $this->http->post($url, [], $payload);
-        info('url: '. $url);
-        info('payload: '. json_encode($payload));
         info('chat-api response: ' . $response->getContent()); 
         return $response;
     }
